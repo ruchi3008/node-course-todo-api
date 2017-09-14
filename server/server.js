@@ -92,7 +92,7 @@ app.patch('/todos/:id',authenticate,(req,res) => {
     res.send({todo});
   }).catch((e) => {
     res.status(400).send();
-  }); 
+  });
 });
 
 app.post('/user',(req,res) => {
@@ -103,7 +103,7 @@ app.post('/user',(req,res) => {
   }).then((token) =>{
     res.header('x-auth',token).send(newUser.toJSON());
   }).catch((e) => {
-
+    console.log(e);
     res.status(400).send(e);
   });
 });
