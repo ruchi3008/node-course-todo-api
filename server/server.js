@@ -89,7 +89,6 @@ app.post('/user',(req,res) => {
   newUser.save().then(() => {
     return newUser.generateAuthToken();
   }).then((token) =>{
-
     res.header('x-auth',token).send(newUser.toJSON());
   }).catch((e) => {
 
@@ -100,6 +99,21 @@ app.post('/user',(req,res) => {
 app.get('/users/me',authenticate,(req,res) => {
 res.send(req.user);
 });
+
+app.post('/users/login',(req,res) => {
+  var body = _.pick(req.body,['email','password']);
+  console.log(body.email,body.password);
+  User.findByCredentials(body.email,body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      res.header('x-auth',token).send(user);
+    });
+    //res.send(user);
+  }).catch((e) => {
+    console.log(e);
+    return res.status(400).send();
+  });
+});
+
 
 app.listen(port,() => {
   console.log(`Server started on ${port}`);
